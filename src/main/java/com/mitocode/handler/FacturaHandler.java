@@ -1,15 +1,12 @@
 package com.mitocode.handler;
 
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
-
 import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
 import com.mitocode.model.Factura;
 import com.mitocode.service.IFacturaService;
 import com.mitocode.util.RequestValidator;
@@ -34,7 +31,6 @@ public class FacturaHandler {
 	
 	public Mono<ServerResponse> listarPorId(ServerRequest req){
 		String id = req.pathVariable("id");
-		
 		return service.listarPorId(id)
 				.flatMap(p -> ServerResponse
 						.ok()
@@ -46,9 +42,7 @@ public class FacturaHandler {
 	
 	public Mono<ServerResponse> registrar(ServerRequest req) {
 		Mono<Factura> monoFactura = req.bodyToMono(Factura.class);
-
-		//VALIDACION CONSTRAINT DE LA CAPA MODELO. METODO 2	
-		return monoFactura
+		return monoFactura		//VALIDACION CONSTRAINT DE LA CAPA MODELO. METODO 2
 				.flatMap(validadorGeneral::validate)//validacion
 				.flatMap(service::registrar)//p -> service.registrar(p)
 				.flatMap(p -> ServerResponse.created(URI.create(req.uri().toString().concat(p.getId())))
@@ -58,10 +52,8 @@ public class FacturaHandler {
 	}
 	
 	public Mono<ServerResponse> modificar(ServerRequest req) {
-		
 		Mono<Factura> monoPlato = req.bodyToMono(Factura.class);		
 		Mono<Factura> monoBD = service.listarPorId(req.pathVariable("id"));
-		
 		return monoBD
 				.zipWith(monoPlato, (bd, p) -> {				
 					bd.setId(req.pathVariable("id"));
@@ -82,7 +74,6 @@ public class FacturaHandler {
 	
 	public Mono<ServerResponse> eliminar(ServerRequest req){
 		String id = req.pathVariable("id");
-		
 		return service.listarPorId(id)
 				.flatMap(p -> service.eliminar(p.getId())
 						.then(ServerResponse.noContent().build())

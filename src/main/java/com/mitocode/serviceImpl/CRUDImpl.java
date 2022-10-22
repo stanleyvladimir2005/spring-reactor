@@ -1,13 +1,10 @@
 package com.mitocode.serviceImpl;
 
 import java.util.stream.Collectors;
-
 import org.springframework.data.domain.Pageable;
-
 import com.mitocode.repo.IGenericRepo;
 import com.mitocode.service.ICRUD;
 import com.mitocode.util.PageSupport;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -53,5 +50,4 @@ public abstract class CRUDImpl<T, ID> implements ICRUD<T, ID> {
 						)
 				);	
 	}
-
 }

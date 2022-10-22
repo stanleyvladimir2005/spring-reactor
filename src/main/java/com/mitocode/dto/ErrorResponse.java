@@ -2,7 +2,6 @@ package com.mitocode.dto;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import lombok.Data;
 
 @Data

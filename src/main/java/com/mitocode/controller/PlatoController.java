@@ -3,12 +3,9 @@ package com.mitocode.controller;
 import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.methodOn;
 import static reactor.function.TupleUtils.function;
-
 import java.net.URI;
 import java.util.ArrayList;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,15 +25,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.mitocode.dto.RestResponse;
 import com.mitocode.model.Plato;
 import com.mitocode.service.IPlatoService;
 import com.mitocode.util.PageSupport;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 @RestController
 @RequestMapping("/platos")
@@ -48,7 +42,6 @@ public class PlatoController {
 	@GetMapping
 	public Mono<ResponseEntity<Flux<Plato>>> listar() {
 		Flux<Plato> fxPlatos = service.listar();
-		
 		return Mono.just(ResponseEntity
 				.ok()
 				.contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +53,6 @@ public class PlatoController {
 	@GetMapping("/RR")
 	public Mono<ResponseEntity<RestResponse>> listarRR() {
 		Flux<Plato> fxPlatos = service.listar();
-		
 		return fxPlatos
 			.collectList()
 			.map(lista -> {
@@ -96,10 +88,8 @@ public class PlatoController {
 	
 	@PutMapping("/{id}")
 	public Mono<ResponseEntity<Plato>> modificar(@Valid @RequestBody Plato p, @PathVariable("id") String id){
-		
 		Mono<Plato> monoPlato = Mono.just(p);
 		Mono<Plato> monoBD = service.listarPorId(id);
-		
 		return monoBD
 				.zipWith(monoPlato, (bd, pl) -> {
 					bd.setId(id);
@@ -128,41 +118,14 @@ public class PlatoController {
 		//localhost:8080/platos/60779cc08e37a27164468033	
 		Mono<Link> link1 =linkTo(methodOn(PlatoController.class).listarPorId(id)).withSelfRel().toMono();
 		Mono<Link> link2 =linkTo(methodOn(PlatoController.class).listarPorId(id)).withSelfRel().toMono();
-		
-		//PRACTICA NO RECOMENDADA YA QUE SE PUEDE GENERAR ERROR PORUQE PUEDE HABER PROCESO BLOQUEANTE
-		/*return service.listarPorId(id)
-				.flatMap(p -> {
-					this.platoHateoas = p;
-					return link1;
-				})
-				.map(lk -> {
-					return EntityModel.of(this.platoHateoas, lk);
-				});*/
-		
-		//PRACTICA INTERMEDIA
-		/*return service.listarPorId(id)
-				.flatMap(p -> {
-					return link1.map(lk -> EntityModel.of(p, lk));
-				});*/
-		
-		//PRACTICA IDEAL
-		/*return service.listarPorId(id)
-				.zipWith(link1, (p, lk) -> EntityModel.of(p, lk));*/
-		
-		//Más de 1 link
 		return link1.zipWith(link2)
 				.map(function((left, right) -> Links.of(left, right)))				
 				.zipWith(service.listarPorId(id), (lk, p) -> EntityModel.of(p, lk));
 	}
 	
 	@GetMapping("/pageable")
-	public Mono<ResponseEntity<PageSupport<Plato>>> listarPagebale(
-			@RequestParam(name = "page", defaultValue = "0") int page,
-		    @RequestParam(name = "size", defaultValue = "10") int size
-			){
-		
+	public Mono<ResponseEntity<PageSupport<Plato>>> listarPagebale(@RequestParam(name = "page", defaultValue = "0") int page,@RequestParam(name = "size", defaultValue = "10") int size	){
 		Pageable pageRequest = PageRequest.of(page, size);
-		
 		return service.listarPage(pageRequest)
 				.map(p -> ResponseEntity.ok()
 						.contentType(MediaType.APPLICATION_JSON)

@@ -2,17 +2,14 @@ package com.mitocode.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.mitocode.model.Usuario;
 import com.mitocode.repo.IGenericRepo;
 import com.mitocode.repo.IRolRepo;
 import com.mitocode.repo.IUsuarioRepo;
 import com.mitocode.security.User;
 import com.mitocode.service.IUsuarioService;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,9 +30,7 @@ public class UsuarioServiceImpl extends CRUDImpl<Usuario, String> implements IUs
 	@Override
 	public Mono<User> buscarPorUsuario(String usuario) {
 		Mono<Usuario> monoUsuario = repo.findOneByUsuario(usuario);
-		
 		List<String> roles = new ArrayList<String>();
-		
 		return monoUsuario.flatMap(u -> {
 			return Flux.fromIterable(u.getRoles())
 					.flatMap(rol -> {

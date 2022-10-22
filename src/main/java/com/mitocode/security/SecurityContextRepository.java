@@ -10,7 +10,6 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-
 import reactor.core.publisher.Mono;
 
 //Clase S6
@@ -30,15 +29,13 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
 		ServerHttpRequest request = swe.getRequest();
 		String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 		
-		//Bearer eyasda.sdasasdasd
 		if (authHeader != null) {
 			if (authHeader.startsWith("Bearer ") || authHeader.startsWith("bearer ")) {
 				String authToken = authHeader.substring(7);
 				Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);
 				return this.authenticationManager.authenticate(auth).map((authentication) -> new SecurityContextImpl(authentication));
-			}else {
-				return Mono.error(new InterruptedException("No estas autorizado"));			
-			}
+			}else
+				return Mono.error(new InterruptedException("No estas autorizado"));
 		}
 		return Mono.empty();
 	}

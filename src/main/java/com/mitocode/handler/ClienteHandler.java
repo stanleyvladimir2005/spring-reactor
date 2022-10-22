@@ -1,19 +1,15 @@
 package com.mitocode.handler;
 
 import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
 import com.mitocode.model.Cliente;
 import com.mitocode.service.IClienteService;
 import com.mitocode.util.RequestValidator;
-
 import reactor.core.publisher.Mono;
-
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 
 @Component
@@ -45,7 +41,6 @@ public class ClienteHandler {
 	
 	public Mono<ServerResponse> registrar(ServerRequest req) {
 		Mono<Cliente> monoPlato = req.bodyToMono(Cliente.class);
-		
 		return monoPlato
 				.flatMap(validadorGeneral::validate)//validacion
 				.flatMap(service::registrar)//p -> service.registrar(p)
@@ -56,10 +51,8 @@ public class ClienteHandler {
 	}
 	
 	public Mono<ServerResponse> modificar(ServerRequest req) {
-		
 		Mono<Cliente> monoPlato = req.bodyToMono(Cliente.class);		
 		Mono<Cliente> monoBD = service.listarPorId(req.pathVariable("id"));
-		
 		return monoBD
 				.zipWith(monoPlato, (bd, p) -> {				
 					bd.setId(p.getId());
@@ -79,7 +72,6 @@ public class ClienteHandler {
 	
 	public Mono<ServerResponse> eliminar(ServerRequest req){
 		String id = req.pathVariable("id");
-		
 		return service.listarPorId(id)
 				.flatMap(p -> service.eliminar(p.getId())
 						.then(ServerResponse.noContent().build())

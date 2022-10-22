@@ -3,7 +3,6 @@ package com.mitocode.repo;
 import java.time.LocalDate;
 import org.springframework.data.mongodb.repository.Query;
 import com.mitocode.model.Factura;
-
 import reactor.core.publisher.Flux;
 
 public interface IFacturaRepo extends IGenericRepo<Factura, String>{

@@ -5,16 +5,13 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
 import com.mitocode.handler.ClienteHandler;
 import com.mitocode.handler.FacturaHandler;
 import com.mitocode.handler.PlatoHandler;
-
 
 //Clase que contiene las rutas de los handler
 @Configuration

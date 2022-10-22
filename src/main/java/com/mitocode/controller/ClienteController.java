@@ -3,15 +3,12 @@ package com.mitocode.controller;
 import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.methodOn;
 import static reactor.function.TupleUtils.function;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.Map;
-
 import javax.validation.Valid;
-
 import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,14 +31,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.mitocode.exceptions.ArchivoException;
 import com.mitocode.model.Cliente;
 import com.mitocode.service.IClienteService;
 import com.mitocode.util.PageSupport;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -56,7 +51,6 @@ public class ClienteController {
 	@GetMapping
 	public Mono<ResponseEntity<Flux<Cliente>>> listar() {
 		Flux<Cliente> fxPlatos = service.listar();
-		
 		return Mono.just(ResponseEntity
 				.ok()
 				.contentType(MediaType.APPLICATION_JSON)
@@ -85,10 +79,8 @@ public class ClienteController {
 	
 	@PutMapping("/{id}")
 	public Mono<ResponseEntity<Cliente>> modificar(@Valid @RequestBody Cliente p, @PathVariable("id") String id){
-		
 		Mono<Cliente> monoPlato = Mono.just(p);
 		Mono<Cliente> monoBD = service.listarPorId(id);
-		
 		return monoBD
 				.zipWith(monoPlato, (bd, pl) -> {
 					bd.setId(id);
@@ -118,19 +110,13 @@ public class ClienteController {
 		//localhost:8080/platos/60779cc08e37a27164468033	
 		Mono<Link> link1 =linkTo(methodOn(ClienteController.class).listarPorId(id)).withSelfRel().toMono();
 		Mono<Link> link2 =linkTo(methodOn(ClienteController.class).listarPorId(id)).withSelfRel().toMono();
-		
-		//Más de 1 link
 		return link1.zipWith(link2)
 				.map(function((left, right) -> Links.of(left, right)))				
 				.zipWith(service.listarPorId(id), (lk, p) -> EntityModel.of(p, lk));
 	}
 	
 	@GetMapping("/pageable")
-	public Mono<ResponseEntity<PageSupport<Cliente>>> listarPagebale(
-			@RequestParam(name = "page", defaultValue = "0") int page,
-		    @RequestParam(name = "size", defaultValue = "10") int size
-			){
-		
+	public Mono<ResponseEntity<PageSupport<Cliente>>> listarPagebale(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "10") int size){
 		Pageable pageRequest = PageRequest.of(page, size);		
 		return service.listarPage(pageRequest)
 				.map(p -> ResponseEntity.ok()
@@ -143,23 +129,19 @@ public class ClienteController {
 	//Este metodo sube el archivo a cloudinary usando metodo bloqueante, ya que espera a recuperar la informacion del cliente y luego transfiere
 	@PostMapping("/v1/subir/{id}") 
 	public Mono<ResponseEntity<Cliente>> subir(@PathVariable String id, @RequestPart FilePart file){
-				
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 				//"cloud_name", "ds6pdw45e",
 				"api_key", "513196324494765",
-				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));  
-		
+				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));
 		return service.listarPorId(id)
 				.publishOn(Schedulers.boundedElastic())
 				.flatMap(c -> {
 					try {
 						File f = Files.createTempFile("temp", file.filename()).toFile();  //Se lee el archivo y se carga en memoria
 						file.transferTo(f).block(); //para tener la transferencia lista
-						
 						Map response= cloudinary.uploader().upload(f, ObjectUtils.asMap("resource_type", "auto"));
 						JSONObject json = new JSONObject(response);
 						String url = json.getString("url");
-						
 						c.setUrlFoto(url);
 						return service.modificar(c).thenReturn(ResponseEntity.ok().body(c));
 					}catch(Exception e) {
@@ -173,14 +155,11 @@ public class ClienteController {
 	//Este metodo sube el archivo a cloudinary sin usar metodo bloqueante, ya que primero transfiere y luego busca el id del cliente y luego transfiere
 	@PostMapping("/v2/subir/{id}")
 	public Mono<ResponseEntity<Cliente>> subirV2(@PathVariable String id, @RequestPart FilePart file) throws IOException{
-				
 		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
 				"cloud_name", "ds6pdw45e",	
 				"api_key", "513196324494765",
-				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));   
-		
+				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));
 		File f = Files.createTempFile("temp", file.filename()).toFile();
-		
 		return file.transferTo(f)
 				.then(service.listarPorId(id)
 						.publishOn(Schedulers.boundedElastic())
@@ -188,7 +167,6 @@ public class ClienteController {
 							Map response;
 							try {
 								response = cloudinary.uploader().upload(f , ObjectUtils.asMap("resource_type", "auto"));
-									        
 						        JSONObject json=new JSONObject(response);
 					            String url=json.getString("url");			            					            
 						        c.setUrlFoto(url);						        

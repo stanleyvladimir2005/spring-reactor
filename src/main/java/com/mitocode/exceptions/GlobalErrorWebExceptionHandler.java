@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -21,18 +20,15 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-
 import com.mitocode.dto.ErrorResponse;
 import com.mitocode.dto.RestResponse;
-
 import reactor.core.publisher.Mono;
 
 @Component
 @Order(-1)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 
-	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, WebProperties webproperties,
-			ApplicationContext applicationContext, ServerCodecConfigurer configurer) {
+	public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes, WebProperties webproperties,	ApplicationContext applicationContext, ServerCodecConfigurer configurer) {
 		super(errorAttributes, webproperties.getResources(), applicationContext);
 		this.setMessageWriters(configurer.getWriters());
 	}
@@ -44,31 +40,18 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 	
 	private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
 		Map<String, Object> errorGeneral = getErrorAttributes(request, ErrorAttributeOptions.defaults());
-		Map<String, Object> mapException = new HashMap<>();		
-				
+		Map<String, Object> mapException = new HashMap<>();
 		var httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		String statusCode = String.valueOf(errorGeneral.get("status"));
-		
 		switch(statusCode) {
 			case "500":
 				mapException.put("code", "500");
 				mapException.put("excepcion", "Error general del backend");
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
-				
 			case "400":
 				Map<String, Object> mapAtributos = request.exchange().getAttributes();
-								
 				try {
-					//Para obtener los mensajes del @Valid - INI				
-					/*WebExchangeBindException valorMapError = (WebExchangeBindException) mapAtributos.get("org.springframework.boot.web.reactive.error.DefaultErrorAttributes.ERROR");
-					BindingResult result =  valorMapError.getBindingResult();
-					List<ObjectError> listaErrores = result.getAllErrors(); 
-		
-					List<String> mensajesError = listaErrores.stream()
-							.map(er -> er.getDefaultMessage())
-							.collect(Collectors.toList());
-					//Para obtener los mensajes del @Valid - FIN*/
 					mapException.put("code", "400");
 					mapException.put("excepcion", "Peticion incorrecta");					
 					httpStatus = HttpStatus.BAD_REQUEST;
@@ -89,13 +72,12 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 				httpStatus = HttpStatus.CONFLICT;
 				break;
 		}
-		
 		RestResponse rr = new RestResponse();
 		rr.setContent(new ArrayList<>());
 		rr.setErrors(Arrays.asList(new ErrorResponse(mapException)));	
 		
 		return ServerResponse.status(httpStatus)
 				.contentType(MediaType.APPLICATION_JSON)
-				.body(BodyInserters.fromValue(rr)); //mapException
+				.body(BodyInserters.fromValue(rr));
 	}
 }

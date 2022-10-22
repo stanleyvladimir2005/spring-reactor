@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
 import reactor.core.publisher.Mono;
 
 //Clase S7
@@ -58,15 +57,6 @@ public class WebSecurityConfig {
 				.pathMatchers("/login").permitAll()
 				.pathMatchers("/v2/login").permitAll()
 				.pathMatchers("/v2/**").authenticated()
-				//.pathMatchers("/v2/**").hasAnyAuthority("ADMIN")  -> para validar por rol especifico
-				/*.pathMatchers("/v2/**")
-					.access((mono, context) -> mono
-	                        .map(auth -> auth.getAuthorities()
-	                        		.stream()
-	                                .filter(e -> e.getAuthority().equals("ADMIN"))
-	                                .count() > 0)
-	                        .map(AuthorizationDecision::new)
-	                )*/
 				.pathMatchers("/platos/**").authenticated()
 				.pathMatchers("/clientes/**").authenticated()
 				.pathMatchers("/facturas/**").authenticated()

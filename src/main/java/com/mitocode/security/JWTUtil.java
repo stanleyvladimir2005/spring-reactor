@@ -6,12 +6,9 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -60,21 +57,9 @@ public class JWTUtil implements Serializable {
 	
 	private String doGenerateToken(Map<String, Object> claims, String username) {
 		long expirationTimeLong = Long.parseLong(expirationTime);
-		
 		final Date createdDate = new Date();
 		final Date expirationDate = new Date(createdDate.getTime() + expirationTimeLong * 1000);
-		
-		/*return Jwts.builder()
-				.setClaims(claims)
-				.setSubject(username)
-				.setIssuedAt(createdDate)
-				.setExpiration(expirationDate)
-				.signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes()))
-				.compact();
-		*/
-		
 		SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
-		
 		return Jwts.builder()
 				   .setClaims(claims)
 				   .setSubject(username)

@@ -2,7 +2,6 @@ package com.mitocode.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.mitocode.model.Cliente;
 import com.mitocode.repo.IClienteRepo;
 import com.mitocode.repo.IGenericRepo;
@@ -18,5 +17,4 @@ public class ClienteServiceImpl extends CRUDImpl<Cliente, String> implements ICl
 	protected IGenericRepo<Cliente, String> getRepo() {
 		return repo;
 	}
-
 }

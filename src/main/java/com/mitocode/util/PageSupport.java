@@ -1,7 +1,6 @@
 package com.mitocode.util;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //Generamos esta clase para la paginacion usando Pageable, ya que esta no se encuentra en WebFlux
@@ -9,7 +8,6 @@ public class PageSupport<T> {
 	
 	public static final String FIRST_PAGE_NUM = "0";
 	public static final String DEFAULT_PAGE_SIZE = "20";
-
 	private List<T> content;
 	private int pageNumber;
 	private int pageSize;
@@ -71,5 +69,4 @@ public class PageSupport<T> {
 	public void setTotalElements(long totalElements) {
 		this.totalElements = totalElements;
 	}
-
 }

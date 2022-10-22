@@ -3,10 +3,8 @@ package com.mitocode.serviceImpl;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.mitocode.dto.FiltroDTO;
 import com.mitocode.model.Factura;
 import com.mitocode.repo.IClienteRepo;
@@ -14,7 +12,6 @@ import com.mitocode.repo.IFacturaRepo;
 import com.mitocode.repo.IGenericRepo;
 import com.mitocode.repo.IPlatoRepo;
 import com.mitocode.service.IFacturaService;
-
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -46,11 +43,10 @@ public class FacturaServiceImpl extends CRUDImpl<Factura, String> implements IFa
 	public Flux<Factura> obtenerFacturasPorFiltro(FiltroDTO filtro) {
 		String criterio = filtro.getIdCliente() != null ? "C" : "O";
 		
-		if (criterio.equalsIgnoreCase("C")) { //si la busqueda viene el cliente
+		if (criterio.equalsIgnoreCase("C"))  //si la busqueda viene el cliente
 			return repo.obtenerFacturasPorCliente(filtro.getIdCliente());
-		} else { //si la busqueda viene por fecha de inicio y fin
+		 else  //si la busqueda viene por fecha de inicio y fin
 			return repo.obtenerFacturasPorFecha(filtro.getFechaInicio(), filtro.getFechaFin());
-		}
 	}
 	
 	//Metodo para generar el reporte cargando el jr
