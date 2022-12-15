@@ -33,7 +33,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/platos")
+@RequestMapping("/v1/platos")
 public class PlatoController {
 	
 	@Autowired

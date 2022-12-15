@@ -42,7 +42,7 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/v1/clientes")
 public class ClienteController {
 	
 	@Autowired
