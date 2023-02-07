@@ -1,9 +1,6 @@
 package com.mitocode.exceptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -46,24 +43,24 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 		switch(statusCode) {
 			case "500":
 				mapException.put("code", "500");
-				mapException.put("excepcion", "Error general del backend");
+				mapException.put("excepcion", "Backend General Error");
 				httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
 			case "400":
 				Map<String, Object> mapAtributos = request.exchange().getAttributes();
 				try {
 					mapException.put("code", "400");
-					mapException.put("excepcion", "Peticion incorrecta");					
+					mapException.put("excepcion", "Invalid Petition");
 					httpStatus = HttpStatus.BAD_REQUEST;
 				}catch(Exception e) {										
 					mapException.put("error", "500");
-					mapException.put("excepcion", "Error general del backend");
+					mapException.put("excepcion", "Backend General Error");
 					httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;					
 				}				
 				break;
 			case "406":
 				mapException.put("code", "406");
-				mapException.put("excepcion", "Archivo no subido correctamente");
+				mapException.put("excepcion", "Upload File Failure");
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				break;			
 			default:
@@ -74,8 +71,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 		}
 		RestResponse rr = new RestResponse();
 		rr.setContent(new ArrayList<>());
-		rr.setErrors(Arrays.asList(new ErrorResponse(mapException)));	
-		
+		rr.setErrors(List.of(new ErrorResponse(mapException)));
 		return ServerResponse.status(httpStatus)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(BodyInserters.fromValue(rr));

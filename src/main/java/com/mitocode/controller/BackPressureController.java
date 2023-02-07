@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.mitocode.model.Plato;
+import com.mitocode.model.Dish;
 import reactor.core.publisher.Flux;
 
 @RestController
@@ -13,27 +13,27 @@ import reactor.core.publisher.Flux;
 public class BackPressureController {
 	
 	@GetMapping(path = "/stream", produces = MediaType.APPLICATION_JSON_VALUE)	
-	public Flux<Plato> stream(){
+	public Flux<Dish> stream(){
 		return Flux.interval(Duration.ofMillis(100))
-				.map(t -> new Plato("1", "ARROZ", 20.0, true));		
+				.map(t -> new Dish("1", "ARROZ", 20.0, true));
 	}
 	
 	@GetMapping(path = "/noStream", produces = "application/stream+json")	
-	public Flux<Plato> noStream(){
+	public Flux<Dish> noStream(){
 		return Flux.interval(Duration.ofMillis(100))
-				.map(t -> new Plato("1", "ARROZ", 20.0, true));						
+				.map(t -> new Dish("1", "ARROZ", 20.0, true));
 	}
 	
 	@GetMapping(path = "/noStreamFinito", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Flux<Plato> fluxFinitonoStream() {
+	public Flux<Dish> fluxFinitonoStream() {
 	    return Flux.range(0, 5000)
-	             .map(t -> new Plato("1", "ARROZ", 20.0, true));
+	             .map(t -> new Dish("1", "ARROZ", 20.0, true));
 	}
 	
 	@GetMapping(path = "/streamFinito", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
-    public Flux<Plato> fluxFinitoStream() {
+    public Flux<Dish> fluxFinitoStream() {
         return Flux.range(0, 5000)
-                .map(t -> new Plato("1", "ARROZ", 20.0, true));
+                .map(t -> new Dish("1", "ARROZ", 20.0, true));
     }
 
 	@GetMapping(value= "/buffer")

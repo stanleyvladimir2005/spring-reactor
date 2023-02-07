@@ -4,6 +4,10 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +15,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //Clase S1
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements UserDetails {
 	
 	@Serial
@@ -21,21 +28,10 @@ public class User implements UserDetails {
 	private Boolean enabled;		
 	private List<String> roles;
 
-	public User(String username, String password, Boolean enabled, List<String> authorities) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
-		this.roles = authorities;
-	}
 
 	@Override
 	public String getUsername() {
 		return username;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	@Override
@@ -82,11 +78,4 @@ public class User implements UserDetails {
 		this.roles = roles;
 	}
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
 }

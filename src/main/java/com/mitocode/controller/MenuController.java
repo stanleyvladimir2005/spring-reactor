@@ -22,8 +22,7 @@ public class MenuController {
 	@Autowired	
 	private IMenuService service;
 	
-	//CONSULTAR DE ACUERDO AL ROL DEL USUARIO QUE INICIO, DEVOLVER SUS MENUS
-	@GetMapping
+		@GetMapping//CONSULTAR DE ACUERDO AL ROL DEL USUARIO QUE INICIO, DEVOLVER SUS MENUS
 	public Mono<ResponseEntity<Flux<Menu>>> listar(){
 		return ReactiveSecurityContextHolder.getContext()
 				.map(SecurityContext::getAuthentication)
@@ -31,7 +30,7 @@ public class MenuController {
 				.map(roles -> {
 					String rolesString = roles.stream().map(Object::toString).collect(Collectors.joining(","));
 					String[] strings = rolesString.split(",");
-					return service.obtenerMenus(strings);
+					return service.getMenus(strings);
 				})
 				.flatMap(fx -> Mono.just(ResponseEntity.ok()  //Mono.just(ResponseEntity.ok()
 						.contentType(MediaType.APPLICATION_JSON)

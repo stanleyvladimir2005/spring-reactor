@@ -13,7 +13,7 @@ import com.mitocode.security.AuthRequest;
 import com.mitocode.security.AuthResponse;
 import com.mitocode.security.ErrorLogin;
 import com.mitocode.security.JWTUtil;
-import com.mitocode.service.IUsuarioService;
+import com.mitocode.service.IUserService;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -23,31 +23,31 @@ public class LoginController {
 	private JWTUtil jwtUtil;
 
 	@Autowired
-	private IUsuarioService service;
+	private IUserService service;
 	
 	@PostMapping("/login")
 	public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar){
-		return service.buscarPorUsuario(ar.getUsername())
+		return service.searchByUser(ar.getUsername())
 				.map((userDetails) -> {
 					if(BCrypt.checkpw(ar.getPassword(), userDetails.getPassword())) {
 						String token = jwtUtil.generateToken(userDetails);
-						Date expiracion = jwtUtil.getExpirationDateFromToken(token);
-						return ResponseEntity.ok(new AuthResponse(token, expiracion));
+						Date expiration = jwtUtil.getExpirationDateFromToken(token);
+						return ResponseEntity.ok(new AuthResponse(token, expiration));
 					}else
-						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorLogin("credenciales incorrectas", new Date()));
+						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorLogin("Invalid Credentials", new Date()));
 				}).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 	
 	@PostMapping("/v2/login")
-	public Mono<ResponseEntity<?>> login(@RequestHeader("usuario") String usuario, @RequestHeader("clave") String clave){
-		return service.buscarPorUsuario(usuario)
+	public Mono<ResponseEntity<?>> login(@RequestHeader("user") String user, @RequestHeader("password") String clave){
+		return service.searchByUser(user)
 				.map((userDetails) -> {
 					if(BCrypt.checkpw(clave, userDetails.getPassword())) {
 						String token = jwtUtil.generateToken(userDetails);
 						Date expiracion = jwtUtil.getExpirationDateFromToken(token);
 						return ResponseEntity.ok(new AuthResponse(token, expiracion));
 					}else
-						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorLogin("credenciales incorrectas", new Date()));
+						return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorLogin("Invalid Credentials", new Date()));
 				}).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
 	}
 }

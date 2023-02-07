@@ -2,8 +2,13 @@ package com.mitocode.util;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-//Generamos esta clase para la paginacion usando Pageable, ya que esta no se encuentra en WebFlux
+@Data //Generamos esta clase para la paginacion usando Pageable, ya que esta no se encuentra en WebFlux
+@NoArgsConstructor
+@AllArgsConstructor
 public class PageSupport<T> {
 	
 	public static final String FIRST_PAGE_NUM = "0";
@@ -12,16 +17,6 @@ public class PageSupport<T> {
 	private int pageNumber;
 	private int pageSize;
 	private long totalElements;
-
-	public PageSupport() {
-	}
-
-	public PageSupport(List<T> content, int pageNumber, int pageSize, long totalElements) {
-		this.content = content;
-		this.pageNumber = pageNumber;
-		this.pageSize = pageSize;
-		this.totalElements = totalElements;
-	}
 
 	@JsonProperty
 	public long totalPages() {
@@ -35,38 +30,6 @@ public class PageSupport<T> {
 
 	@JsonProperty
 	public boolean last() {
-		return (pageNumber + 1) * pageSize >= totalElements;
-	}
-
-	public List<T> getContent() {
-		return content;
-	}
-
-	public void setContent(List<T> content) {
-		this.content = content;
-	}
-
-	public int getPageNumber() {
-		return pageNumber;
-	}
-
-	public void setPageNumber(int pageNumber) {
-		this.pageNumber = pageNumber;
-	}
-
-	public int getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	public long getTotalElements() {
-		return totalElements;
-	}
-
-	public void setTotalElements(long totalElements) {
-		this.totalElements = totalElements;
+		return (long) (pageNumber + 1) * pageSize >= totalElements;
 	}
 }

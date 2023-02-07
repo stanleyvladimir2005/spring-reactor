@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
-//CLase para quitar el atributo class al ingresar en las colecciones en mongoDB
-@Configuration
+@Configuration //CLase para quitar el atributo class al ingresar en las colecciones en mongoDB
 public class MongoConfig implements InitializingBean{
 
 	@Autowired

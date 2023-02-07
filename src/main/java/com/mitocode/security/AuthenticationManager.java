@@ -39,6 +39,6 @@ public class AuthenticationManager implements ReactiveAuthenticationManager{
 			);
 			return Mono.just(auth);
 		}else
-			return Mono.error(new InterruptedException("Token no válido o ha expirado"));
+			return Mono.error(new InterruptedException("Invalid Token"));
 	}
 }
