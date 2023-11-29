@@ -31,15 +31,11 @@ public class WebSecurityConfig {
 	public SecurityWebFilterChain securitygWebFilterChain(ServerHttpSecurity http) {
 		return http
 				.exceptionHandling()
-				.authenticationEntryPoint((swe, e) -> {					
-					return Mono.fromRunnable(() -> {
-						swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);						
-					});
-				}).accessDeniedHandler((swe, e) -> {					
-					return Mono.fromRunnable(() -> {						
-						swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-					});
-				})
+				.authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> {
+					swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+				})).accessDeniedHandler((swe, e) -> Mono.fromRunnable(() -> {
+					swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+				}))
 				.and()
 				.csrf().disable()				
 				.formLogin().disable()
@@ -57,9 +53,9 @@ public class WebSecurityConfig {
 				.pathMatchers("/login").permitAll()
 				.pathMatchers("/v2/login").permitAll()
 				.pathMatchers("/v2/**").authenticated()
-				.pathMatchers("/platos/**").authenticated()
-				.pathMatchers("/clientes/**").authenticated()
-				.pathMatchers("/facturas/**").authenticated()
+				.pathMatchers("/dishes/**").authenticated()
+				.pathMatchers("/clients/**").authenticated()
+				.pathMatchers("/bills/**").authenticated()
 				.pathMatchers("/backpressure/**").permitAll()
 				.pathMatchers("/menus/**").authenticated()
 				.anyExchange().authenticated()
