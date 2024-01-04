@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +25,6 @@ public class User implements UserDetails {
 	private String password;	
 	private Boolean enabled;		
 	private List<String> roles;
-
 
 	@Override
 	public String getUsername() {
@@ -68,14 +65,6 @@ public class User implements UserDetails {
 	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public List<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
 	}
 
 }
