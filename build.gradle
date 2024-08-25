@@ -33,7 +33,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.projectreactor.addons:reactor-extra'
 	implementation 'net.sf.jasperreports:jasperreports:7.0.0'
-	implementation 'com.github.librepdf:openpdf:2.0.2'
+	implementation 'com.github.librepdf:openpdf:2.0.3'
 	implementation 'org.springdoc:springdoc-openapi-webflux-ui:1.8.0'
 	implementation 'org.springdoc:springdoc-openapi-security:1.8.0'
 	compileOnly 'org.projectlombok:lombok'
