@@ -6,7 +6,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$USER_HOME$/.sdkman/candidates/gradle/8.14.3" />
+        <option name="gradleHome" value="E:\Program Files\gradle-8.14.3" />
         <option name="gradleJvm" value="Java 21" />
         <option name="modules">
           <set>
