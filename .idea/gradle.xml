@@ -6,13 +6,13 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="E:\Portable Programs\gradle-8.14.4" />
         <option name="gradleJvm" value="Java 21" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
           </set>
         </option>
+        <option name="myGradleHome" value="E:\Program Files\gradle-8.14.5" />
       </GradleProjectSettings>
     </option>
   </component>
