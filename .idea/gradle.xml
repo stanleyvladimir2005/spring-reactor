@@ -12,7 +12,7 @@
             <option value="$PROJECT_DIR$" />
           </set>
         </option>
-        <option name="myGradleHome" value="E:\Program Files\gradle-8.14.5" />
+        <option name="myGradleHome" value="$USER_HOME$/.sdkman/candidates/gradle/8.14.5" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
@@ -47,6 +48,15 @@ public class ClientController {
 	
 	@Autowired
 	private IClientService service;
+
+	@Value("${cloudinary.cloud-name:}")
+	private String cloudinaryCloudName;
+
+	@Value("${cloudinary.api-key:}")
+	private String cloudinaryApiKey;
+
+	@Value("${cloudinary.api-secret:}")
+	private String cloudinaryApiSecret;
 	
 	@GetMapping
 	public Mono<ResponseEntity<Flux<Client>>> findAll() {
@@ -129,10 +139,7 @@ public class ClientController {
 	//Este metodo sube el archivo a cloudinary usando metodo bloqueante, ya que espera a recuperar la informacion del cliente y luego transfiere
 	@PostMapping("/v1/upload/{id}")
 	public Mono<ResponseEntity<Client>> upload(@PathVariable String id, @RequestPart FilePart file){
-		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-				//"cloud_name", "ds6pdw45e",
-				"api_key", "513196324494765",
-				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));
+		Cloudinary cloudinary = cloudinary();
 		return service.findById(id)
 				.publishOn(Schedulers.boundedElastic())
 				.flatMap(c -> {
@@ -154,10 +161,7 @@ public class ClientController {
 	//Este metodo sube el archivo a cloudinary sin usar metodo bloqueante, ya que primero transfiere y luego busca el id del cliente y luego transfiere
 	@PostMapping("/v2/upload/{id}")
 	public Mono<ResponseEntity<Client>> uploadV2(@PathVariable String id, @RequestPart FilePart file) throws IOException{
-		Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-				"cloud_name", "ds6pdw45e",	
-				"api_key", "513196324494765",
-				"api_secret", "PUvNv61a0Ohd4DadfBIillVjuHI"));
+		Cloudinary cloudinary = cloudinary();
 		File f = Files.createTempFile("temp", file.filename()).toFile();
 		return file.transferTo(f)
 				.then(service.findById(id)
@@ -176,5 +180,12 @@ public class ClientController {
 						})
 						.defaultIfEmpty(ResponseEntity.notFound().build())
 					);	
+	}
+
+	private Cloudinary cloudinary() {
+		return new Cloudinary(ObjectUtils.asMap(
+				"cloud_name", cloudinaryCloudName,
+				"api_key", cloudinaryApiKey,
+				"api_secret", cloudinaryApiSecret));
 	}
 }
